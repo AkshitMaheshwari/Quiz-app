@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Questions - {{ quiz.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('admin.list_quizzes', chapter_id=quiz.chapter.id) }}">{{ quiz.chapter.name }}</a></li>
+            <li class="breadcrumb-item active">{{ quiz.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Questions - {{ quiz.title }}</h2>
+        <a href="{{ url_for('admin.new_question', quiz_id=quiz.id) }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> New Question
+        </a>
+    </div>
+
+    {% for question in quiz.questions %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <h5 class="card-title">{{ loop.index }}. {{ question.question_statement }}</h5>
+                <div class="btn-group">
+                    <a href="{{ url_for('admin.edit_question', id=question.id) }}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <a href="{{ url_for('admin.delete_question', id=question.id) }}" 
+                       class="btn btn-outline-danger btn-sm"
+                       onclick="return confirm('Are you sure you want to delete this question?')">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-2 {% if question.correct_option == 1 %}text-success fw-bold{% endif %}">
+                        A) {{ question.option1 }}
+                    </div>
+                    <div class="mb-2 {% if question.correct_option == 2 %}text-success fw-bold{% endif %}">
+                        B) {{ question.option2 }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-2 {% if question.correct_option == 3 %}text-success fw-bold{% endif %}">
+                        C) {{ question.option3 }}
+                    </div>
+                    <div class="mb-2 {% if question.correct_option == 4 %}text-success fw-bold{% endif %}">
+                        D) {{ question.option4 }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

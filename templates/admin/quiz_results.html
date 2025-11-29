@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Result - {{ quiz.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Quiz Result: {{ quiz.title }}</h4>
+        </div>
+        <div class="card-body">
+            <div class="text-center mb-4">
+                {% for user_result in user_results %}
+    <h1 class="display-4">
+        {{ user_result.total_scored }}/{{ user_result.total_questions }}
+    </h1>
+{% endfor %}
+
+                <p class="lead">
+                    {% if score %}
+    <p>Percentage: {{ (score.total_scored / score.total_questions * 100)|round(1) }}%</p>
+{% endif %}
+                </p>
+                <div class="progress" style="height: 25px;">
+                    <div class="progress-bar 
+                                {% if (score.total_scored / score.total_questions * 100) >= 70 %}bg-success
+                                {% elif (score.total_scored / score.total_questions * 100) >= 40 %}bg-warning
+                                {% else %}bg-danger{% endif %}" 
+                         role="progressbar"
+                         style="width: {{ (score.total_scored / score.total_questions * 100)|round(1) }}%">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-muted mb-4">
+                <p>Completed on: {{ score.time_stamp_of_attempt.strftime('%Y-%m-%d %H:%M') }}</p>
+                <p>Duration: {{ quiz.time_duration }} minutes</p>
+            </div>
+
+            <hr>
+
+            <h4 class="mb-3">Quiz Questions & Answers</h4>
+            <div class="mb-4">
+                {% for attempt in result_data %}
+                <div class="mb-3 p-3 border rounded {% if attempt.selected_option != attempt.correct_option %}bg-light{% endif %}">
+                    <h5 class="fw-bold">{{ loop.index }}. {{ attempt.question_text }}</h5>
+                    <div class="row">
+                        <div class="col-md-6">  
+                            <div class="mb-2 {% if attempt.correct_option == 1 %}text-success fw-bold{% endif %}
+                                            {% if attempt.selected_option == 1 and attempt.selected_option != attempt.correct_option %}text-danger{% endif %}">
+                                A) {{ attempt.options[0] }}
+                            </div>
+                            <div class="mb-2 {% if attempt.correct_option == 2 %}text-success fw-bold{% endif %}
+                                            {% if attempt.selected_option == 2 and attempt.selected_option != attempt.correct_option %}text-danger{% endif %}">
+                                B) {{ attempt.options[1] }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-2 {% if attempt.correct_option == 3 %}text-success fw-bold{% endif %}
+                                            {% if attempt.selected_option == 3 and attempt.selected_option != attempt.correct_option %}text-danger{% endif %}">
+                                C) {{ attempt.options[2] }}
+                            </div>
+                            <div class="mb-2 {% if attempt.correct_option == 4 %}text-success fw-bold{% endif %}
+                                            {% if attempt.selected_option == 4 and attempt.selected_option != attempt.correct_option %}text-danger{% endif %}">
+                                D) {{ attempt.options[3] }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <a href="{{ url_for('admin.view_user_scores', user_id=user.id) }}" class="btn btn-secondary mt-3">Back to User Scores</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

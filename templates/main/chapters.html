@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Chapters - {{ subject.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.dashboard') }}">Subjects</a></li>
+            <li class="breadcrumb-item active">{{ subject.name }}</li>
+        </ol>
+    </nav>
+
+    <h2 class="mb-4">Chapters - {{ subject.name }}</h2>
+    
+    <div class="row">
+        {% for chapter in subject.chapters %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 quiz-card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ chapter.name }}</h5>
+                    <p class="card-text">{{ chapter.description }}</p>
+                    <a href="{{ url_for('main.list_quizzes', chapter_id=chapter.id) }}" class="btn btn-primary">
+                        View Quizzes
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if question %}Edit Question{% else %}New Question{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Subjects</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('admin.list_chapters', subject_id=quiz.chapter.subject.id) }}">{{ quiz.chapter.subject.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('admin.list_quizzes', chapter_id=quiz.chapter.id) }}">{{ quiz.chapter.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('admin.list_questions', quiz_id=quiz.id) }}">{{ quiz.title }}</a></li>
+            <li class="breadcrumb-item active">{% if question %}Edit Question{% else %}New Question{% endif %}</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">{% if question %}Edit Question{% else %}New Question{% endif %}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="question_statement" class="form-label">Question Text</label>
+                            <textarea class="form-control" id="question_statement" name="question_statement" rows="3" required>{{ question.text if question else '' }}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="option1" class="form-label">Option 1</label>
+                            <input type="text" class="form-control" id="option1" name="option1" 
+                                   value="{{ question.option2 if question else '' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="option2" class="form-label">Option 2</label>
+                            <input type="text" class="form-control" id="option2" name="option2" 
+                                   value="{{ question.option2 if question else '' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="option3" class="form-label">Option 3</label>
+                            <input type="text" class="form-control" id="option3" name="option3" 
+                                   value="{{ question.option3 if question else '' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="option4" class="form-label">Option 4</label>
+                            <input type="text" class="form-control" id="option4" name="option4" 
+                                   value="{{ question.option4 if question else '' }}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="correct_option" class="form-label">Correct Option</label>
+                            <select class="form-select" id="correct_option" name="correct_option" required>
+                                 <boltAction type="file" filePath="app/templates/admin/question_form.html">                                <option value="1" {% if question and question.correct_option == '1' %}selected{% endif %}>A</option>
+                                <option value="2" {% if question and question.correct_option == '2' %}selected{% endif %}>B</option>
+                                <option value="3" {% if question and question.correct_option == '3' %}selected{% endif %}>C</option>
+                                <option value="4" {% if question and question.correct_option == '4' %}selected{% endif %}>D</option>
+                            </select>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('admin.list_questions', quiz_id=quiz.id) }}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

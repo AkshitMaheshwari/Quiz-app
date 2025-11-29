@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Result - {{ quiz.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Quiz Result: {{ quiz.title }}</h4>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <h1 class="display-4">
+                            {{ score.total_scored }}/{{ score.total_questions }}
+                        </h1>
+                        <p class="lead">
+                            Percentage: {{ (score.total_scored / score.total_questions * 100)|round(1) }}%
+                        </p>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar 
+                                        {% if (score.total_scored / score.total_questions * 100) >= 70 %}bg-success
+                                        {% elif (score.total_scored / score.total_questions * 100) >= 40 %}bg-warning
+                                        {% else %}bg-danger{% endif %}" 
+                                 role="progressbar"
+                                 style="width: {{ (score.total_scored / score.total_questions * 100)|round(1) }}%">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-muted mb-4">
+                        <p>Completed on: {{ score.time_stamp_of_attempt.strftime('%Y-%m-%d %H:%M') }}</p>
+                        <p>Duration: {{ quiz.time_duration }} minutes</p>
+                    </div>
+
+                    <hr>
+
+                    <h4 class="mb-3">Quiz Questions & Answers</h4>
+                    <div class="mb-4">
+                        {% for attempt in result_data %}
+                        <div class="mb-3 p-3 border rounded {% if attempt.selected_option != attempt.correct_option %}bg-light{% endif %}">
+                            <h5 class="fw-bold">{{ loop.index }}. {{ attempt.question_text }}</h5>
+                            <div class="row">
+                                <div class="col-md-6">  
+                                    <div class="mb-2 {% if attempt.correct_option == 1 %}text-success fw-bold{% endif %}
+                                                    {% if attempt.selected_option == 1 and attempt.selected_option != attempt.correct_option %}text-danger{% endif %}">
+                                        A) {{ attempt.options[0] }}
+                                        {% if attempt.selected_option == 1 %}{% endif %}
+                                    </div>
+                                    <div class="mb-2 {% if attempt.correct_option == 2 %}text-success fw-bold{% endif %}
+                                                    {% if attempt.selected_option == 2 and attempt.selected_option != attempt.correct_option %}text-danger{% endif %}">
+                                        B) {{ attempt.options[1] }}
+                                        {% if attempt.selected_option == 2 %}{% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-2 {% if attempt.correct_option == 3 %}text-success fw-bold{% endif %}
+                                                    {% if attempt.selected_option == 3 and attempt.selected_option != attempt.correct_option %}text-danger{% endif %}">
+                                        C) {{ attempt.options[2] }}
+                                        {% if attempt.selected_option == 3 %}{% endif %}
+                                    </div>
+                                    <div class="mb-2 {% if attempt.correct_option == 4 %}text-success fw-bold{% endif %}
+                                                    {% if attempt.selected_option == 4 and attempt.selected_option != attempt.correct_option %}text-danger{% endif %}">
+                                        D) {{ attempt.options[3] }}
+                                        {% if attempt.selected_option == 4 %}{% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('main.list_quizzes', chapter_id=quiz.chapter_id) }}" class="btn btn-primary">
+                            Back to Quizzes
+                        </a>
+                        <a href="{{ url_for('main.my_scores') }}" class="btn btn-info">
+                            View All My Scores
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

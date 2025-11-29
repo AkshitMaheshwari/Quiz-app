@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}My Scores{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="mb-4">My Quiz Scores</h2>
+    
+    <div class="row">
+        {% for score in scores %}
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ score.quiz.title }}</h5>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            {{ score.quiz.chapter.subject.name }} > 
+                            {{ score.quiz.chapter.name }}
+                        </small>
+                    </p>
+                    
+                    <div class="mb-3">
+                        <h3 class="mb-2">Score: {{ score.total_scored }}/{{ score.total_questions }}</h3>
+                        <div class="progress" style="height: 20px;">
+                            <div class="progress-bar {% if (score.total_scored / score.total_questions * 100) >= 70 %}bg-success
+                                                    {% elif (score.total_scored / score.total_questions * 100) >= 40 %}bg-warning
+                                                    {% else %}bg-danger{% endif %}"
+                                 role="progressbar"
+                                 style="width: {{ (score.total_scored / score.total_questions * 100)|round(1) }}%">
+                                 {{ (score.total_scored / score.total_questions * 100) | round(1) }}%
+                                </div>
+                        </div>
+                    </div>
+                    
+                    <p class="text-muted">
+                        Completed on: {{ score.time_stamp_of_attempt.strftime('%Y-%m-%d %H:%M') }}
+                    </p>
+                    
+                    <a href="{{ url_for('main.quiz_result', quiz_id=score.quiz_id) }}" 
+                       class="btn btn-primary">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if not scores %}
+    <div class="alert alert-info">
+        You haven't attempted any quizzes yet.
+    </div>
+    {% endif %}
+    
+    <div class="mt-4">
+        <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary">
+            Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}

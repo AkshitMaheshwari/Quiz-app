@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Registered Users{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Registered Users</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Full Name</th>
+                <th>View Results</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ user.full_name }}</td>
+                
+                <td>
+                    <a href="{{ url_for('admin.view_user_scores', user_id=user.id) }}" class="btn btn-info">
+                        View Results
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

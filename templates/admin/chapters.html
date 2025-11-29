@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Chapters - {{ subject.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('admin.dashboard') }}">Subjects</a></li>
+            <li class="breadcrumb-item active">{{ subject.name }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Chapters - {{ subject.name }}</h2>
+        <a href="{{ url_for('admin.new_chapter', subject_id=subject.id) }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> New Chapter
+        </a>
+    </div>
+
+    <div class="row">
+        {% for chapter in subject.chapters %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ chapter.name }}</h5>
+                    <p class="card-text">{{ chapter.description }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{{ url_for('admin.list_quizzes', chapter_id=chapter.id) }}" class="btn btn-info">
+                            Quizzes ({{ chapter.quizzes|length }})
+                        </a>
+                        <div class="btn-group">
+                            <a href="{{ url_for('admin.edit_chapter', id=chapter.id) }}" class="btn btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="{{ url_for('admin.delete_chapter', id=chapter.id) }}" 
+                               class="btn btn-outline-danger"
+                               onclick="return confirm('Are you sure you want to delete this chapter?')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

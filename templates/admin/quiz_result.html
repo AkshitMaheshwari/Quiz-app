@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Results for {{ quiz.title }}</h2>
+
+<p><strong>Total Attempts:</strong> {{ total_attempts }}</p>
+<p><strong>Average Score:</strong> {{ avg_score }}</p>
+
+<table border="1">
+    <tr>
+        <th>User</th>
+        <th>Score</th>
+        <th>Correct Answers</th>
+        <th>Total Questions</th>
+        <th>Time Taken (s)</th>
+        <th>Attempt Time</th>
+        <th>Details</th>
+    </tr>
+    {% for result in user_results %}
+    <tr>
+        <td><a href="{{ url_for('admin.view_user_scores', user_id=result.user.id) }}">
+            {{ result.user.full_name }}
+        </a></td>
+        <td>{{ result.total_scored }}</td>
+        <td>{{ result.correct_answers }}</td>
+        <td>{{ result.total_questions }}</td>
+        <td>{{ result.time_taken }}</td>
+        <td>{{ result.attempt_time }}</td>
+        <td>
+            <button onclick="toggleDetails('{{ loop.index }}')">View</button>
+            <div id="details-{{ loop.index }}" style="display: none;">
+                <ul>
+                    {% for response in result.responses %}
+                    <li>
+                        <strong>Q:</strong> {{ response.question }}<br>
+                        <strong>Selected:</strong> {{ response.selected_option }}<br>
+                        <strong>Correct:</strong> {{ response.correct_option }}<br>
+                        <strong>{% if response.is_correct %}✅ Correct{% else %}❌ Incorrect{% endif %}</strong>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<script>
+function toggleDetails(id) {
+    var details = document.getElementById('details-' + id);
+    details.style.display = details.style.display === "none" ? "block" : "none";
+}
+</script>
+{% endblock %}
