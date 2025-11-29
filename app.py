@@ -4,10 +4,9 @@ from models.models import db, User
 from controllers.auth import auth, login_manager
 import os
 from flask_migrate import Migrate
-from dotenv import load_dotenv
-load_dotenv()
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('Secret_KEY')
+app.config['SECRET_KEY'] = 'b@9$!X3d&kZpQ7mCwR1tVs%L'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quiz_master.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
