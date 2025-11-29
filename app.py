@@ -4,6 +4,7 @@ from models.models import db, User
 from controllers.auth import auth,login_manager
 import os
 from flask_migrate import Migrate
+from sqlalchemy.exc import IntegrityError
 
 
 
@@ -30,16 +31,20 @@ app.register_blueprint(main, url_prefix='/main')
 with app.app_context():
     db.create_all()
     
-    admin = User.query.filter_by(username='admin@example.com').first()
-    if not admin:
-        admin = User(
-            username='admin@example.com',
-            full_name='Administrator',
-            is_admin=True
-        )
-        admin.set_password('admin123') 
-        db.session.add(admin)
-        db.session.commit()
+    try:
+        admin = User.query.filter_by(username='admin@example.com').first()
+        if not admin:
+            admin = User(
+                username='admin@example.com',
+                full_name='Administrator',
+                is_admin=True
+            )
+            admin.set_password('admin123') 
+            db.session.add(admin)
+            db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        print("Admin user already exists (created by another worker).")
 
 @app.route('/')
 def index():
