@@ -14,6 +14,7 @@ WORKDIR /app
 # gcc is often needed for compiling python packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
+    dos2unix \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -25,6 +26,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the current directory contents into the container at /app
 COPY . .
+
+# Convert entrypoint.sh to Unix line endings
+RUN dos2unix entrypoint.sh
 
 # Create a non-root user and switch to it
 RUN useradd -m appuser && chown -R appuser:appuser /app
