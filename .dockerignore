@@ -9,7 +9,4 @@ venv
 *.egg-info
 .git
 .gitignore
-instance
-*.db
-*.sqlite
 .vscode

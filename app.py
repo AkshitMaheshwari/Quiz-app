@@ -1,16 +1,13 @@
 from flask import Flask, redirect, url_for
 from flask_login import LoginManager
 from models.models import db, User
-from controllers.auth import auth,login_manager
+from controllers.auth import auth, login_manager
 import os
 from flask_migrate import Migrate
-from sqlalchemy.exc import IntegrityError
-
-
-
-
+from dotenv import load_dotenv
+load_dotenv()
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'b@9$!X3d&kZpQ7mCwR1tVs%L'
+app.config['SECRET_KEY'] = os.getenv('Secret_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quiz_master.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -19,32 +16,11 @@ login_manager.init_app(app)
 login_manager.login_view = 'auth.login'
 migrate = Migrate(app, db)
 
-
 app.register_blueprint(auth)
 from controllers.admin import admin  
 app.register_blueprint(admin, url_prefix='/admin')
 from controllers.main import main
 app.register_blueprint(main, url_prefix='/main')
-
-
-
-with app.app_context():
-    db.create_all()
-    
-    try:
-        admin = User.query.filter_by(username='admin@example.com').first()
-        if not admin:
-            admin = User(
-                username='admin@example.com',
-                full_name='Administrator',
-                is_admin=True
-            )
-            admin.set_password('admin123') 
-            db.session.add(admin)
-            db.session.commit()
-    except IntegrityError:
-        db.session.rollback()
-        print("Admin user already exists (created by another worker).")
 
 @app.route('/')
 def index():
